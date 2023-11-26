@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700&amp;subset=cyrillic" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&amp;subset=cyrillic" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&amp;subset=cyrillic" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i|Tinos:400,400i&amp;subset=cyrillic"
+		rel="stylesheet">
+	<link rel="icon" href="images/tile-P.png" type="image/png">
+	<script src="index.js"></script>
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body,
+		html {
+			height: 100%;
+			/* width: 100%; */
+			overflow: hidden;
+			padding: 0;
+			margin: 0;
+			border: 2px solid #d0d0d0;
+		}
+
+		body {
+			background-color: #000000;
+			color: #ffffff;
+		}
+
+		h1 {
+			font-family: "Playfair Display";
+			font-size: 30px;
+			/* padding: 10px 0px; */
+			margin: 0px;
+		}
+
+		.field-box {
+			/* border: 2px solid #d0d0d0; */
+			float: left;
+
+		}
+
+		.field {
+			position: relative;
+			width: 1024px;
+			height: 640px;
+		}
+
+		.field .tile {
+			position: absolute;
+			width: 50px;
+			height: 50px;
+			background-size: 100%;
+			background-image: url(images/tile-.png);
+			z-index: 5;
+		}
+
+		.field .tileW {
+			background-image: url(images/tile-W.png);
+		}
+
+		.field .tileE {
+			background-image: url(images/tile-E.png);
+			z-index: 10;
+		}
+
+		.field .tileP {
+			background-image: url(images/tile-P.png);
+			z-index: 10;
+		}
+
+		.field .tileHP {
+			background-image: url(images/tile-HP.png);
+			z-index: 9;
+		}
+
+		.field .tileSW {
+			background-image: url(images/tile-SW.png);
+			z-index: 9;
+		}
+
+		.field .tile .health {
+			background-color: #ff0000;
+			z-index: 11;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			height: 3px;
+		}
+
+		.field .tileP .health {
+			background-color: #00ff00;
+			z-index: 11;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			height: 3px;
+		}
+
+		.inventory-box {
+			border: 2px solid #d0d0d0;
+			float: left;
+		}
+
+		.inventory {
+			position: relative;
+			width: 800px;
+			height: 32px;
+		}
+
+		.cl {
+			clear: both;
+			display: block;
+		}
+
+		.modal {
+			background-color: #ff0000;
+			position: fixed;
+			top: 0;
+			left: 0;
+			position: fixed;
+			z-index: 100;
+			height: 100%;
+			width: 100%;
+			opacity: 0.4;
+			align-items: center;
+			align-self: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+
+		}
+
+		.settingForm {
+			display: none;
+
+		}
+
+		.settingForm.hidden {
+			display: block;
+			display: flex;
+			flex-direction: column;
+			font-size: 20px;
+			position: absolute;
+			z-index: 20;
+			top: 0;
+			right: 0;
+			padding: 20px;
+		}
+
+		.toggleMusicButton {
+
+			top: 0;
+			right: 0;
+		}
+
+		.settingForm ul {
+			display: flex;
+			flex-direction: column;
+		}
+
+		#volumeControl {
+			cursor: pointer;
+		}
+
+		#toggleMusicButton {
+			position: absolute;
+			right: 20px;
+			z-index: 21;
+			top: 30px;
+			font-size: 10px;
+			background-color: #3498db;
+			color: #fff;
+			border: none;
+			cursor: pointer;
+		}
+
+		#toggleMusicButton:hover {
+			background-color: #2980b9;
+		}
+
+		#toggleFormButton {
+			position: absolute;
+			right: 10px;
+			top: 2px;
+			z-index: 21;
+			padding: 4px 6px;
+			font-size: 10px;
+			background-color: #3498db;
+			color: #fff;
+			border: none;
+			cursor: pointer;
+		}
+
+
+		#toggleFormButton:hover {
+			background-color: #2980b9;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- <h1>Игровое поле</h1> -->
+
+	<button id="toggleMusicButton">Play Music</button>
+
+	<audio id="backgroundMusic" loop>
+		<source src="bit-lol-music.mp3" type="audio/mp3">
+		Your browser does not support the audio element.
+	</audio>
+	<button id="toggleFormButton">Показать/скрыть форму</button>
+	<form class="settingForm" id="sizeForm">
+		<ul>
+			<span>Настройка ландшафта</span>
+			<li><label for="colsInput">Количество столбцов:</label>
+				<input type="number" id="colsInput" value="40">
+			</li>
+			<li><label for="rowsInput">Количество строк:</label>
+				<input type="number" id="rowsInput" value="24">
+			</li>
+
+			<li><label for="roadsInput">Количество дорог:</label>
+				<input type="number" id="roadsInput" value="5">
+			</li>
+			<li><label for="roomsInput">Количество комнат:</label>
+				<input type="number" id="roomsInput" value="5">
+			</li>
+			<span>Настройка объектов</span>
+
+			<li><label for="potionsInput">Количество зелий:</label>
+				<input type="number" id="potionsInput" value="10">
+			</li>
+			<li><label for="weaponsInput">Количество мечей:</label>
+				<input type="number" id="weaponsInput" value="2">
+			</li>
+			<li><label for="enemiesInput">Количество врагов:</label>
+				<input type="number" id="enemiesInput" value="10">
+			</li>
+		</ul>
+		<button type="button" id="applyButton">Применить</button>
+	</form>
+	<div class="field-box">
+		<div id="gameField" class="field"></div>
+	</div>
+	<div class="cl"></div>
+	<!--h1>Инвентарь</h1>
+		<div class="inventory-box"><div class="inventory"></div></div-->
+
+	<script>
+
+		var game = new Game();
+		game.init();
+	</script>
+</body>
+
+</html>
