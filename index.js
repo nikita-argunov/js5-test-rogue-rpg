@@ -411,6 +411,7 @@ var Game = function () {
     startAgainButton.addEventListener("click", function () {
       updateGame();
       modal.style.display = "none";
+      modalCreated = false;
     });
     modal.appendChild(startAgainButton);
     document.body.appendChild(modal);
